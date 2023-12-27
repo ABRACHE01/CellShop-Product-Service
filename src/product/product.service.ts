@@ -17,19 +17,28 @@ export class ProductService {
   }
 
   async findAll(): Promise<Product[]> {
-    return await this.productRepository.find();
+    return await this.productRepository.find({ where: { isDeleted: false } });
   }
 
   async findOne(id: string): Promise<Product> {
-    return this.productRepository.findOne({ where: { id } });
+    return this.productRepository.findOne({ where: { id , isDeleted: false } });
   }
 
-  async update(id: string, product: Partial<Product>): Promise<Product> {
-    await this.productRepository.update(id, product);
-    return this.productRepository.findOne({ where: { id } });
+  async update(id: string, updateProductDto: UpdateProductDto): Promise<Product> {
+    await this.productRepository.update(id, updateProductDto);
+    return this.productRepository.findOne({ where: { id , isDeleted: false } });
   }
 
   async delete(id: string): Promise<void> {
     await this.productRepository.delete(id);
+  }
+
+  async softDelete(id: string): Promise<void> {
+    const product = await this.productRepository.findOne({ where: { id ,  isDeleted: false } });
+    if (!product) {
+      throw new NotFoundException('Product not found');
+    }
+    product.isDeleted = true;  
+    await this.productRepository.save(product);
   }
 }

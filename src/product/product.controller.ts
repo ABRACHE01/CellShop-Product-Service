@@ -90,9 +90,9 @@ export class ProductController {
     if (!product) {
       throw new NotFoundException('product does not exist!');
     }
-    await this.productService.delete(ProductId);
+    await this.productService.softDelete(ProductId);
     return res.json({
-      message: 'Product has been deleted!',
+      message: 'Product has been trashed successfully',
       product: product,
     });
   }
