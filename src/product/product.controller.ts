@@ -21,6 +21,19 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
+  @Get('search')
+  @HttpCode(200)
+  async searchProducts(
+    @Res() res,
+    @Query('q') query: string,
+  ): Promise<any> {
+    const products = await this.productService.search(query);
+    return res.json({
+      message: 'Search results',
+      products: products,
+    });
+  }
+  
   @Post()
   @HttpCode(201)
   @UsePipes(ValidationPipe)

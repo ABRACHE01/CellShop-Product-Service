@@ -3,7 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 
 @Injectable()
 export class ProductService {
@@ -11,6 +11,24 @@ export class ProductService {
     @InjectRepository(Product)
     private productRepository: Repository<Product>,
   ) {}
+
+  
+  async search(query: string): Promise<Product[]> {
+    const descriptionResults = await this.productRepository.find({
+      where: { description: ILike(`%${query}%`), isDeleted: false },
+    });
+
+    const brandResults = await this.productRepository.find({
+      where: { brand: ILike(`%${query}%`), isDeleted: false },
+    });
+
+    const nameResults = await this.productRepository.find({
+      where: { name: ILike(`%${query}%`), isDeleted: false },
+    });
+
+    const combinedResults = [...descriptionResults, ...brandResults , ...nameResults];
+    return combinedResults;
+  }
 
   async create(createProductDto: CreateProductDto) {
     return await this.productRepository.save(createProductDto);
