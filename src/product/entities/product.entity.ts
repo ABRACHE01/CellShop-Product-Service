@@ -1,11 +1,10 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { v4 as uuid } from 'uuid';
 
 @Entity('products')
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn({
-    comment: 'the product unique identifier',
-  })
-  id: number;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column({
     comment: 'the product name',
@@ -47,7 +46,10 @@ export class Product extends BaseEntity {
   })
   isDeleted: boolean;
 
-
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
+
 }
