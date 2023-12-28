@@ -6,6 +6,7 @@ import configuration from './config/configuration';
 import { DatabaseConfig } from './config/database.config';
 import { ProductModule } from './product/product.module';
 import { BrandModule } from './brand/brand.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -23,6 +24,8 @@ import { BrandModule } from './brand/brand.module';
     ProductModule,
 
     BrandModule,
+
+    UsersModule,
   ],
 })
 export class AppModule {}

@@ -34,27 +34,15 @@ export class ProductService {
     return await this.productRepository.save(createProductDto);
   }
 
-
-async findAll(): Promise<Product[]> {
-  return await this.productRepository
-    .createQueryBuilder('product')
-    .leftJoinAndSelect('product.brand', 'brand')
-    .where('product.isDeleted = :isDeleted', { isDeleted: false })
-    .select([
-      'product.name',
-      'product.price',
-      'product.image',
-      'product.description',
-      'product.id',
-      'product.isDeleted',
-      'product.createdAt',
-      'product.updatedAt',
-      'brand.id',
-      'brand.name',
-    ])
-    .getMany();
-}
-
+  async findAll(): Promise<Product[]> {
+    return await this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.brand', 'brand', 'brand.isDeleted = :isBrandDeleted', { isBrandDeleted: false })
+      .leftJoinAndSelect('product.addedBy', 'addedBy', 'addedBy.isDeleted = :isUserDeleted', { isUserDeleted: false })
+      .select(['product', 'brand.name', 'addedBy.fullName'])
+      .where('product.isDeleted = :isDeleted', { isDeleted: false })
+      .getMany();
+  }
   async findOne(id: string): Promise<Product> {
     return this.productRepository.findOne({ where: { id , isDeleted: false } });
   }

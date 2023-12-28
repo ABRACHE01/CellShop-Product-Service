@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Brand } from '../../brand/entities/brand.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
@@ -34,6 +35,9 @@ export class Product extends BaseEntity {
 
   @ManyToOne(() => Brand, brand => brand.products)
   brand: Brand;
+
+  @ManyToOne(() => User, user => user.products)
+  addedBy: User;
 
   @Column({
     comment: 'is deleted',
