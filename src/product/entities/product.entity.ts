@@ -1,9 +1,9 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { v4 as uuid } from 'uuid';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { Brand } from '../../brand/entities/brand.entity';
 
 @Entity('products')
 export class Product extends BaseEntity {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({
@@ -32,15 +32,11 @@ export class Product extends BaseEntity {
   })
   image: string;
 
-  @Column({
-    comment: 'the product brand',
-    type: 'varchar',
-    nullable: true,
-  })
-  brand: string;
+  @ManyToOne(() => Brand, brand => brand.products)
+  brand: Brand;
 
   @Column({
-    comment: 'is deleted ',
+    comment: 'is deleted',
     type: 'boolean',
     default: false,
   })
@@ -51,5 +47,4 @@ export class Product extends BaseEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   updatedAt: Date;
-
 }

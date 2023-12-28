@@ -1,3 +1,4 @@
+import { Brand } from '../../brand/entities/brand.entity';
 import { IsNotEmpty, IsNumber, IsString, MaxLength } from 'class-validator';
 
 export class CreateProductDto {
@@ -14,6 +15,6 @@ export class CreateProductDto {
   @IsString()
   image: string;
 
-  @IsString()
-  brand: string;
+  Brand: Brand;
+  
 }
